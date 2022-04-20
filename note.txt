@@ -1,1 +1,2 @@
 - {DONE} creating sample blockchain
+- {DONE} adding mining functionality to the blockchain

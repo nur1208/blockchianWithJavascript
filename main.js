@@ -7,6 +7,7 @@ class Block {
     this.data = data;
     this.perviousHash = perviousHash;
     this.hash = this.calculateHash();
+    this.nonce = 0;
   }
 
   calculateHash() {
@@ -14,14 +15,28 @@ class Block {
       this.index +
         this.perviousHash +
         this.timestamp +
-        JSON.stringify(this.data)
+        JSON.stringify(this.data) +
+        this.nonce
     ).toString();
+  }
+
+  minBlock(difficulty) {
+    while (
+      this.hash.substring(0, difficulty) !==
+      Array(difficulty + 1).join("0")
+    ) {
+      this.nonce++;
+      this.hash = this.calculateHash();
+    }
+
+    console.log("mined with hash:" + this.hash);
   }
 }
 
 class BlockChain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
+    this.difficulty = 4;
   }
 
   createGenesisBlock() {
@@ -34,7 +49,7 @@ class BlockChain {
 
   addBlock(newBlock) {
     newBlock.perviousHash = this.getLastBlock().hash;
-    newBlock.hash = newBlock.calculateHash();
+    newBlock.minBlock(this.difficulty);
     this.chain.push(newBlock);
   }
 
@@ -55,19 +70,23 @@ class BlockChain {
 }
 
 let savjeCoin = new BlockChain();
+console.log("mining block 1...");
+
 savjeCoin.addBlock(new Block(2, "2/2/2017", { amount: 4 }));
+
+console.log("mining block 2...");
 savjeCoin.addBlock(new Block(3, "3/2/2017", { amount: 41 }));
 
-console.log(JSON.stringify(savjeCoin, null, 4));
-console.log(`is blockchain valid: ${savjeCoin.isChainValid()}`);
+// console.log(JSON.stringify(savjeCoin, null, 4));
+// console.log(`is blockchain valid: ${savjeCoin.isChainValid()}`);
 
-console.log(savjeCoin.chain[2].hash);
+// console.log(savjeCoin.chain[2].hash);
 
-savjeCoin.chain[1].data = { amount: 4444 };
-savjeCoin.chain[1].hash = savjeCoin.chain[1].calculateHash();
-savjeCoin.chain[2].perviousHash = savjeCoin.chain[1].hash;
-savjeCoin.chain[2].hash = savjeCoin.chain[2].calculateHash();
+// savjeCoin.chain[1].data = { amount: 4444 };
+// savjeCoin.chain[1].hash = savjeCoin.chain[1].calculateHash();
+// savjeCoin.chain[2].perviousHash = savjeCoin.chain[1].hash;
+// savjeCoin.chain[2].hash = savjeCoin.chain[2].calculateHash();
 
-console.log(savjeCoin.chain[2].hash);
+// console.log(savjeCoin.chain[2].hash);
 
-console.log(`is blockchain valid: ${savjeCoin.isChainValid()}`);
+// console.log(`is blockchain valid: ${savjeCoin.isChainValid()}`);
