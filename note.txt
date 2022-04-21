@@ -1,2 +1,3 @@
 - {DONE} creating sample blockchain
 - {DONE} adding mining functionality to the blockchain
+- {DONE} improving adding block to blockchain and giving Reward to miner and creating Transaction class
